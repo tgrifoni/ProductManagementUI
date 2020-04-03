@@ -1,0 +1,9 @@
+.fill-space-right {
+    flex: 1 1 auto;
+}
+  
+a:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.15);
+}

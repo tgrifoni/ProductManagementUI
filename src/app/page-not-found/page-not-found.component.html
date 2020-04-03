@@ -1,0 +1,9 @@
+<mat-card>
+  <mat-card-title>Página não encontrada :(</mat-card-title>
+  <br />
+  <mat-card-content>Talvez a página que você esteja procurando tenha sido removida, ou você digitou o endereço incorreto.</mat-card-content>
+  <mat-card-actions class="hr">
+    <a mat-button (click)="goBack()">Voltar</a>
+    <a mat-button [routerLink]="['/welcome']">Página Inicial</a>
+  </mat-card-actions>
+</mat-card>

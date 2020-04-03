@@ -1,0 +1,25 @@
+.products-container {
+    padding: 10px;
+    height: 100%;
+}
+
+.header {
+    display: inline;
+}
+
+.new-product-btn {
+    float: right;
+}
+
+table {
+    width: 100%;
+}
+  
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+  
+td, th {
+    width: 25%;
+}

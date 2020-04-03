@@ -1,0 +1,16 @@
+.products-container {
+    padding: 10px;
+    height: 100%;
+}
+
+.header {
+    display: inline;
+}
+
+textarea {
+    resize: none !important;
+}
+
+.mat-slider {
+    width: 100%;
+}
