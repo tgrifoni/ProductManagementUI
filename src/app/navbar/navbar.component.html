@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
-    <span class="fill-space-right">{{title}}</span>
+    <span class="app-title">{{title}}</span>
+    <span class="fill-space-right"></span>
     <a mat-button [routerLink]="['/welcome']" routerLinkActive="mat-raised-button">Página Inicial</a>
     <a mat-button [routerLink]="['/products']" routerLinkActive="mat-raised-button" [routerLinkActiveOptions]="{exact : true}">Produtos</a>
 </mat-toolbar>
