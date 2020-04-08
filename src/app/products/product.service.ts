@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { environment } from 'src/environments/environment';
-
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import { environment } from 'src/environments/environment';
 import { Product, ProductCategory } from './product';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService) { }
 
   getAll(): Observable<Product[]> {
     return this.http.get<Product[]>(`${environment.apiUrl}/product`)
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.handleError(error))
       );
   }
 
@@ -28,14 +30,14 @@ export class ProductService {
 
     return this.http.get<Product>(`${environment.apiUrl}/product/${id}`)
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.handleError(error))
       );
   }
 
   delete(id: number): Observable<{}> {
     return this.http.delete(`${environment.apiUrl}/product/${id}`)
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.handleError(error))
       );
   }
 
@@ -45,14 +47,14 @@ export class ProductService {
     if (product.id === 0 && id === 0) {
       return this.http.post(`${environment.apiUrl}/product`, request)
         .pipe(
-          catchError(this.handleError)
+          catchError(error => this.handleError(error))
         );
     }
 
     return this.http.put(`${environment.apiUrl}/product/${id}`, request)
-        .pipe(
-          catchError(this.handleError)
-        );
+      .pipe(
+        catchError(error => this.handleError(error))
+      );
   }
 
   initializeNewProduct(): Product {
@@ -69,15 +71,22 @@ export class ProductService {
     };
   }
 
-  private handleError(err: HttpErrorResponse) {
+  private handleError(errorResponse: HttpErrorResponse) {
+    const unauthorizedStatusCode = 401;
+
+    if (errorResponse.status === unauthorizedStatusCode) {
+      this.authService.logout('/login');
+      return throwError('Sua sessão expirou ! Faça login novamente.');
+    }
+
     let errorMessage = 'Ocorreu um erro ! ';
-    if (err.error instanceof ErrorEvent) {
-      errorMessage += `${err.error.message}`;
-    } else if (err.error instanceof ProgressEvent || !err.error) {
+    if (errorResponse.error instanceof ErrorEvent) {
+      errorMessage += `${errorResponse.error.message}`;
+    } else if (errorResponse.error instanceof ProgressEvent || !errorResponse.error) {
       errorMessage += 'Falha ao tentar conectar com o servidor. Tente novamente mais tarde.';
-    } else if (typeof err.error === 'string') {
-      errorMessage += `${err.error}`;
-    } else if (err.error.errors) {
+    } else if (typeof errorResponse.error === 'string') {
+      errorMessage += `${errorResponse.error}`;
+    } else if (errorResponse.error.errors) {
       errorMessage = `Ocorreram erros de validação !`;
     }
     return throwError(errorMessage);

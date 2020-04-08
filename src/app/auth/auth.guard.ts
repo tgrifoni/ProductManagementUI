@@ -9,14 +9,16 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanLoad {
-  constructor(private authService: AuthService,
+  constructor(
+    private authService: AuthService,
     private router: Router) { }
-    
+
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.checkLoggedIn(state.url);
   }
+
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
@@ -24,7 +26,7 @@ export class AuthGuard implements CanActivate, CanLoad {
   }
 
   private checkLoggedIn(url: string): boolean {
-    if (this.authService.isLoggedIn) {
+    if (this.authService.isAuthenticated) {
       return true;
     }
     this.authService.redirectUrl = url;
