@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +8,19 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
   title = 'Gerenciamento de Produtos';
+
+  get username() {
+    return this.authService.username;
+  }
+
+  get isAuthenticated() {
+    return this.authService.isAuthenticated;
+  }
+
+  constructor(
+    private authService: AuthService) {}
+
+  logout() {
+    this.authService.logout();
+  }
 }

@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ProductsComponent implements OnInit {
   displayedColumns = ['name', 'code', 'releaseDate', 'price', 'update', 'delete'];
-  pageTitle = 'Lista de Produtos';
+  pageTitle = 'Produtos';
 
   products: MatTableDataSource<Product>;
 

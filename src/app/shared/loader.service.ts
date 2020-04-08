@@ -4,17 +4,17 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class LoaderService {
-  private loading: boolean;
+  private _isLoading: boolean;
 
   get isLoading(): boolean {
-    return this.loading;
+    return this._isLoading;
   }
 
   startedLoading() {
-    window.setTimeout(() => this.loading = true);
+    window.setTimeout(() => this._isLoading = true);
   }
 
   finishedLoading() {
-    window.setTimeout(() => this.loading = false);
+    window.setTimeout(() => this._isLoading = false);
   }
 }

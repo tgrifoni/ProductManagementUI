@@ -7,19 +7,31 @@ import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthenticationResponse } from './authentication-response';
 
+const loggedOffUsername = 'Anônimo';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = false;
+  private _isAuthenticated = false;
+  private _authToken: string;
+  private _username = loggedOffUsername;
   redirectUrl: string;
 
   constructor(
     private http: HttpClient,
     private router: Router) {}
 
-  get isLoggedIn(): boolean {
-    return this.isAuthenticated;
+  get isAuthenticated(): boolean {
+    return this._isAuthenticated;
+  }
+
+  get authToken(): string {
+    return this._authToken;
+  }
+
+  get username(): string {
+    return this._username;
   }
 
   login(username: string, password: string) {
@@ -30,18 +42,19 @@ export class AuthService {
     return this.http.get<AuthenticationResponse>(`${environment.apiUrl}/authentication`, httpOptions)
     .pipe(
       tap(response => {
-        this.isAuthenticated = response.isAuthenticated;
-        window.localStorage.setItem('app-token', `Bearer ${response.token}`);
-        window.localStorage.setItem('app-username', username);
+        this._isAuthenticated = response.isAuthenticated;
+        this._authToken = `Bearer ${response.token}`;
+        this._username =  username;
       }),
-      catchError(this.handleError)
+      catchError(error => this.handleError(error))
     );
   }
 
-  logout() {
-    this.isAuthenticated = false;
-    window.localStorage.clear();
-    this.router.navigate(['/']);
+  logout(redirectUrl = '/') {
+    this._isAuthenticated = false;
+    this._authToken = null;
+    this._username = loggedOffUsername;
+    this.router.navigate([redirectUrl]);
   }
 
   private handleError(err: HttpErrorResponse) {
